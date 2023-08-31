@@ -1,5 +1,5 @@
 import type { Actions } from './$types';
-import type { User } from '$lib/types';
+import type { NewUser } from '$lib/types';
 import { redirect } from '@sveltejs/kit';
 
 export const actions = {
@@ -9,7 +9,7 @@ export const actions = {
 		const data = Object.fromEntries(formData.entries());
 
 		// Create new user object
-		const userData: User = {
+		const userData: NewUser = {
 			name: data.name.toString(),
 			email: data.email.toString(),
 			password: data.password.toString(),
@@ -19,7 +19,7 @@ export const actions = {
 
 		// Create new user
 		try {
-			const newUser = await locals.pb.collection('users').create(userData);
+			const createUser = await locals.pb.collection('users').create(userData);
 		} catch (error: any) {
 			console.log('Failed to create user: ', error.response.data);
 			return {

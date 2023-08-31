@@ -1,8 +1,9 @@
 // src/hooks.server.js
 import PocketBase from 'pocketbase';
+import { POCKETBASE_API } from '$env/static/private';
 
 export async function handle({ event, resolve }) {
-	event.locals.pb = new PocketBase('https://pocketbase.andrejfernandez.dev');
+	event.locals.pb = new PocketBase(POCKETBASE_API);
 
 	// load the store data from the request cookie string
 	event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
