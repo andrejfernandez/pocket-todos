@@ -6,6 +6,11 @@ export interface NewUser {
 	emailVisibility: boolean;
 }
 
+export interface NewList {
+	name: string;
+	user: string;
+}
+
 export interface User {
 	avatar: string;
 	collectionId: string;

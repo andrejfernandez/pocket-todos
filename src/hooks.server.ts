@@ -1,7 +1,7 @@
-// src/hooks.server.js
 import PocketBase from 'pocketbase';
 import { POCKETBASE_API } from '$env/static/private';
 
+// @ts-ignore
 export async function handle({ event, resolve }) {
 	event.locals.pb = new PocketBase(POCKETBASE_API);
 

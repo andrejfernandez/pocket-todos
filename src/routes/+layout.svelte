@@ -1,9 +1,13 @@
 <script lang="ts">
 	import '../app.css';
 	import Swap from '$lib/components/Swap.svelte';
-	import type { RecordModel, AdminModel } from 'pocketbase';
+	import plus from '$lib/assets/plus.svg';
+	import { user, lists } from '$lib/stores';
+
 	export let data;
-	$: user = data?.user;
+	// Update the stores
+	$: if (data.user) user.set(data.user);
+	$: if (data.lists) lists.set(data.lists);
 </script>
 
 <div class="drawer lg:drawer-open">
@@ -18,11 +22,31 @@
 		<div class="flex flex-col items-start p-4 w-80 min-h-full bg-base-200 text-base-content">
 			<!-- Sidebar content -->
 			<div class="flex">
-				<h1 class="text-2xl font-bold pl-4">Pocket Todos</h1>
+				<a href="/" class="z-10 btn btn-ghost normal-case text-2xl font-bold">Pocket Todos</a>
 				<Swap />
 			</div>
-			{#if user}
-				<h1 class="text-xl font-light pl-4 text-center">Welcome, {user.name}</h1>
+			{#if $user}
+				<h1 class="text-xl font-light pl-4 text-center">Welcome, {$user.name}</h1>
+				<ul class="menu mt-8 w-full min-h-full bg-base-300 text-base-content">
+					<!-- Sidebar content here -->
+					{#each $lists as list}
+						<li>
+							<a href="/list/{list.id}">{list.name}</a>
+						</li>
+					{/each}
+				</ul>
+				<form method="POST" action="/?/addlist" class="flex justify-between mt-5 w-full">
+					<input
+						name="name"
+						type="text"
+						placeholder="New list..."
+						class="input input-bordered bg-transparent w-full max-w-xs"
+					/>
+					<input type="hidden" name="user" value={$user.id} />
+					<button class="btn btn-square text-xl">
+						<img src={plus} alt="+" />
+					</button>
+				</form>
 			{:else}
 				<ul class="menu w-full">
 					<li><a href="/login">Login</a></li>
