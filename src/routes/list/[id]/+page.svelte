@@ -4,16 +4,14 @@
 	import { page } from '$app/stores';
 	import plus from '$lib/assets/plus.svg';
 	import type { ChangeEventHandler } from 'svelte/elements';
+	import type { Todo } from '$lib/types';
 
 	$: id = $page.params.id;
 	$: list = $lists.filter((list) => list.id === id)[0];
-	$: listTodos = $todos.filter((todo) => todo.list === id);
+	$: listTodos = $page.data.todos.filter((todo: Todo) => todo.list === id);
 
 	function submitForm(id: string) {
-		console.log(`Submitting form with id: ${id}`);
-		// get form by id
 		const form = document.getElementById(id) as HTMLFormElement;
-		console.log('form=' + form);
 		if (form) form.submit();
 	}
 </script>
@@ -71,18 +69,29 @@
 		{#each listTodos as todo (todo.id)}
 			<form
 				id={todo.id}
-				method="POST"
+				method="post"
 				action="?/updateTodo"
 				class="w-full flex justify-between mb-2"
 			>
 				<input type="hidden" name="id" value={todo.id} />
 				<input type="hidden" name="list" value={todo.list} />
-				<input type="text" name="task" bind:value={todo.task} class="input input-ghost w-full" />
+				<input type="hidden" name="completed" value={todo.completed} />
+
 				<input
 					type="checkbox"
-					name="completed"
-					class="checkbox checkbox-lg my-auto ml-4"
-					checked={true}
+					name="completedBox"
+					class="checkbox checkbox-lg my-auto mr-4"
+					bind:value={todo.completed}
+					on:click={() => {
+						todo.completed = !todo.completed;
+						submitForm(todo.id);
+					}}
+				/>
+				<input
+					type="text"
+					name="task"
+					bind:value={todo.task}
+					class="input input-ghost w-full"
 					on:change={() => submitForm(todo.id)}
 				/>
 				<button class="btn btn-square btn-ghost ml-2">
