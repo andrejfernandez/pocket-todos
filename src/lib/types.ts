@@ -11,6 +11,13 @@ export interface NewList {
 	user: string;
 }
 
+export interface NewTodo {
+	id?: string;
+	list: string;
+	task: string;
+	completed: boolean;
+}
+
 export interface User {
 	avatar: string;
 	collectionId: string;

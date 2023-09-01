@@ -1,7 +1,5 @@
 import type { Actions } from './$types';
 import type { NewList } from '$lib/types';
-import { user } from '$lib/stores';
-import { page, navigating } from '$app/stores';
 
 export const actions = {
 	addList: async ({ locals, request }) => {

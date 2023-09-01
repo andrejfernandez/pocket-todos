@@ -5,13 +5,14 @@ export const load = (async ({ locals }) => {
 	if (locals.pb.authStore.isValid) {
 		// Get user dand list ata
 		const userData = locals.pb.authStore.model;
+		console.log('Getting lists...');
 		const listData = await locals.pb.collection('todoLists').getFullList({
 			sort: '-created'
 		});
+		console.log('Getting todos...');
 		const todoData = await locals.pb.collection('todos').getFullList({
 			sort: '-created'
 		});
-		console.log(todoData);
 		// Create user and list objects from data
 		const user: User = userData as User;
 		const lists: List[] = listData.map((list: any) => {
