@@ -34,3 +34,14 @@ export interface List {
 	updated: string;
 	user: string;
 }
+
+export interface Todo {
+	collectionId: string;
+	collectionName: string;
+	completed: boolean;
+	created: string;
+	id: string;
+	list: string;
+	task: string;
+	updated: string;
+}

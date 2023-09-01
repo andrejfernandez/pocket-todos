@@ -4,8 +4,7 @@ import { user } from '$lib/stores';
 import { page, navigating } from '$app/stores';
 
 export const actions = {
-	addlist: async ({ locals, request }) => {
-		console.log('addlist action');
+	addList: async ({ locals, request }) => {
 		// Get form data
 		const formData = await request.formData();
 		const data = Object.fromEntries(formData.entries());

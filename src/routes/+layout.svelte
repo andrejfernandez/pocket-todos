@@ -2,14 +2,16 @@
 	import '../app.css';
 	import Swap from '$lib/components/Swap.svelte';
 	import plus from '$lib/assets/plus.svg';
-	import { user, lists } from '$lib/stores';
+	import { user, lists, todos } from '$lib/stores';
 
 	export let data;
 	// Update the stores
 	$: if (data.user) user.set(data.user);
 	$: if (data.lists) lists.set(data.lists);
+	$: if (data.todos) todos.set(data.todos);
 </script>
 
+<!-- Start Drawer -->
 <div class="drawer lg:drawer-open">
 	<input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
 	<div class="drawer-content flex flex-col items-center justify-center">
@@ -26,16 +28,18 @@
 				<Swap />
 			</div>
 			{#if $user}
+				<!-- Show when logged in -->
 				<h1 class="text-xl font-light pl-4 text-center">Welcome, {$user.name}</h1>
 				<ul class="menu mt-8 w-full min-h-full bg-base-300 text-base-content">
-					<!-- Sidebar content here -->
+					<!-- User's Todo Lists -->
 					{#each $lists as list}
-						<li>
+						<li style="background-color: #fffff;">
 							<a href="/list/{list.id}">{list.name}</a>
 						</li>
 					{/each}
 				</ul>
-				<form method="POST" action="/?/addlist" class="flex justify-between mt-5 w-full">
+				<!-- Add new Todo List -->
+				<form method="POST" action="/?/addList" class="flex justify-between mt-5 w-full">
 					<input
 						name="name"
 						type="text"
@@ -43,11 +47,12 @@
 						class="input input-bordered bg-transparent w-full max-w-xs"
 					/>
 					<input type="hidden" name="user" value={$user.id} />
-					<button class="btn btn-square text-xl">
+					<button class="btn btn-square btn-ghost text-xl ml-1">
 						<img src={plus} alt="+" />
 					</button>
 				</form>
 			{:else}
+				<!-- Show actions for auth -->
 				<ul class="menu w-full">
 					<li><a href="/login">Login</a></li>
 					<li><a href="/register">Register</a></li>
@@ -55,6 +60,7 @@
 			{/if}
 
 			{#if user}
+				<!-- Logout button -->
 				<button
 					class="btn btn-outline fixed bottom-0 mb-5"
 					on:click={() => {
@@ -65,3 +71,4 @@
 		</div>
 	</div>
 </div>
+<!-- End Drawer -->
