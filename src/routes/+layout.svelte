@@ -47,8 +47,9 @@
 						class="input input-bordered bg-transparent w-full max-w-xs"
 					/>
 					<input type="hidden" name="user" value={$user.id} />
-					<button class="btn btn-square btn-ghost text-xl ml-1">
-						<img src={plus} alt="+" />
+					<button class="btn btn-square btn-ghost text-3xl ml-1">
+						<!-- <img src={plus} alt="+" /> -->
+						<span class="mb-1">+</span>
 					</button>
 				</form>
 			{:else}
@@ -61,12 +62,14 @@
 
 			{#if user}
 				<!-- Logout button -->
-				<button
-					class="btn btn-outline fixed bottom-0 mb-5"
-					on:click={() => {
-						window.location.href = '/logout';
-					}}>Logout</button
-				>
+				<div class="w-full flex justify-center">
+					<button
+						class="btn btn-outline fixed bottom-0 mb-5"
+						on:click={() => {
+							window.location.href = '/logout';
+						}}>Logout</button
+					>
+				</div>
 			{/if}
 		</div>
 	</div>

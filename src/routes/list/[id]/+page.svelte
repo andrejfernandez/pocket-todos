@@ -8,16 +8,19 @@
 
 	$: id = $page.params.id;
 	$: list = $lists.filter((list) => list.id === id)[0];
-	$: listTodos = $page.data.todos.filter((todo: Todo) => todo.list === id);
+	$: listTodos = $page.data.todos.filter((todo: Todo) => todo.list === id) as Todo[];
 
 	function submitForm(id: string) {
 		const form = document.getElementById(id) as HTMLFormElement;
 		if (form) form.submit();
 	}
+
+	let renameModal: HTMLDialogElement;
+	let deleteModal: HTMLDialogElement;
 </script>
 
 <!-- Start Todo List View -->
-<div class="min-h-screen w-4/5 mt-10 flex flex-col items-center">
+<div class="h-full w-4/5 mt-10 flex flex-col items-center">
 	<!-- List Navbar -->
 	<div class="navbar bg-base-100">
 		<div class="flex-1">
@@ -43,9 +46,9 @@
 			<!-- Navbar Actions -->
 			<ul class="menu menu-md mt-1 dropdown-content bg-base-200 rounded-box">
 				<!-- svelte-ignore a11y-missing-attribute -->
-				<li><a>Delete</a></li>
+				<button class="btn" on:click={() => renameModal.showModal()}>Rename</button>
 				<!-- svelte-ignore a11y-missing-attribute -->
-				<li><a>Rename</a></li>
+				<button class="btn" on:click={() => deleteModal.showModal()}>Delete</button>
 			</ul>
 		</div>
 	</div>
@@ -59,14 +62,15 @@
 				placeholder="What needs to be done?"
 				class="input input-bordered bg-transparent w-full"
 			/>
-			<button class="btn btn-square btn-ghost text-xl ml-5">
-				<img src={plus} alt="+" />
+			<button class="btn btn-square btn-ghost text-3xl ml-5">
+				<span class="mb-1">+</span>
+				<!-- <img src={plus} alt="+" /> -->
 			</button>
 		</form>
 	</div>
 	<!-- Show list todos -->
 	<div class="w-3/4 flex flex-col items-center justify-center mt-10">
-		{#each listTodos as todo (todo.id)}
+		{#each listTodos as todo}
 			<form
 				id={todo.id}
 				method="post"
@@ -75,18 +79,14 @@
 			>
 				<input type="hidden" name="id" value={todo.id} />
 				<input type="hidden" name="list" value={todo.list} />
-				<input type="hidden" name="completed" value={todo.completed} />
-
 				<input
 					type="checkbox"
-					name="completedBox"
-					class="checkbox checkbox-lg my-auto mr-4"
-					bind:value={todo.completed}
-					on:click={() => {
-						todo.completed = !todo.completed;
-						submitForm(todo.id);
-					}}
+					name="completed"
+					class="checkbox my-auto mr-4"
+					checked={todo.completed}
+					on:change={() => submitForm(todo.id)}
 				/>
+
 				<input
 					type="text"
 					name="task"
@@ -94,7 +94,7 @@
 					class="input input-ghost w-full"
 					on:change={() => submitForm(todo.id)}
 				/>
-				<button class="btn btn-square btn-ghost ml-2">
+				<button formaction="?/deleteTodo" class="btn btn-square btn-ghost ml-2">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						class="h-6 w-6"
@@ -114,3 +114,47 @@
 	</div>
 </div>
 <!-- End Todo List View -->
+
+<!-- Rename modal -->
+<dialog bind:this={renameModal} class="modal">
+	<form method="dialog" class="modal-box bg-base-200">
+		<h3 class="font-bold text-lg">Update list name!</h3>
+		<form id="update-list-name" method="post" action="?/updateListName">
+			<input type="hidden" name="id" value={list.id} />
+			<input
+				type="text"
+				name="name"
+				value={list.name}
+				on:change={() => submitForm('update-list-name')}
+				class="input input-bordered w-full my-5"
+			/>
+		</form>
+	</form>
+	<form method="dialog" class="modal-backdrop">
+		<button>close</button>
+	</form>
+</dialog>
+<!-- End Rename modal -->
+<!-- Delete modal -->
+<dialog bind:this={deleteModal} class="modal">
+	<form method="dialog" class="modal-box bg-base-200">
+		<h3 class="font-bold text-lg w-full text-center mt-5">
+			Are you sure you want to delete this list?
+		</h3>
+		<form
+			id="delete-list"
+			method="post"
+			action="?/deleteList"
+			class="flex items-center justify-center"
+		>
+			<input type="hidden" name="id" value={list.id} />
+
+			<button class="btn btn-neutral w-20 m-2">Yes</button>
+			<button class="btn btn-neutral w-20 mx-2 my-5" formaction="?/blank">No</button>
+		</form>
+	</form>
+	<form method="dialog" class="modal-backdrop">
+		<button>close</button>
+	</form>
+</dialog>
+<!-- End Delete modal -->
