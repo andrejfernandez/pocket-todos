@@ -34,7 +34,8 @@
 					<!-- User's Todo Lists -->
 					{#each $lists as list}
 						<li style="background-color: #fffff;">
-							<a href="/list/{list.id}">{list.name}</a>
+							<a href="/list-client/{list.id}">[Client] {list.name}</a>
+							<a href="/list-server/{list.id}">[Server] {list.name}</a>
 						</li>
 					{/each}
 				</ul>

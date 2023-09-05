@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { PageData } from '../../list/[id]/$types';
+	import type { PageData } from '../../list-server/[id]/$types';
 	import { user, lists, todos } from '$lib/stores';
 	import { page } from '$app/stores';
 	import plus from '$lib/assets/plus.svg';
